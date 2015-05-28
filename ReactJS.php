@@ -21,6 +21,12 @@ class ReactJS {
      * @var string
      */
     $component,
+
+    /**
+     * The Javascript scope in which React components are contained (defaults to global)
+     * @var string
+     */
+    $componentScope = 'global',
     
     /**
      * Properties that go along with the component
@@ -80,6 +86,17 @@ class ReactJS {
     $this->data = json_encode($data);
     return $this;
   }
+
+  /**
+   * Sets the Javascript scope in which React components are contained
+   *
+   * @param string $scope The Javascript scope
+   * @return ReactJS $this instance
+   */
+  function setComponentScope($scope) {
+    $this->componentScope = $scope;
+    return $this;
+  }
   
   /**
    * Custom error handler. The default one var_dumps the exception
@@ -100,7 +117,8 @@ class ReactJS {
    */
   function getMarkup() {
     $js = sprintf(
-      "print(React.renderToString(React.createElement(%s, %s)))",
+      "print(React.renderToString(React.createElement(%s.%s, %s)))",
+      $this->componentScope,
       $this->component,
       $this->data);
 
