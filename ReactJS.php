@@ -23,10 +23,10 @@ class ReactJS {
     $component,
 
     /**
-     * The Javascript scope in which React components are contained (defaults to global)
+     * The JavaScript scope in which React components are contained (defaults to global)
      * @var string
      */
-    $componentScope = 'global',
+    $componentScope,
     
     /**
      * Properties that go along with the component
@@ -88,9 +88,9 @@ class ReactJS {
   }
 
   /**
-   * Sets the Javascript scope in which React components are contained
+   * Sets the JavaScript scope in which React components are contained
    *
-   * @param string $scope The Javascript scope
+   * @param string $scope The JavaScript scope
    * @return ReactJS $this instance
    */
   function setComponentScope($scope) {
@@ -116,9 +116,12 @@ class ReactJS {
    * @return string HTML string
    */
   function getMarkup() {
+    if ($this->componentScope) {
+      $this->component = $this->componentScope.'.'.$this->component;
+    }
+    
     $js = sprintf(
-      "print(React.renderToString(React.createElement(%s.%s, %s)))",
-      $this->componentScope,
+      "print(React.renderToString(React.createElement(%s, %s)))",
       $this->component,
       $this->data);
 
@@ -163,7 +166,7 @@ class ReactJS {
   }
 
   /**
-   * Executes Javascript using V8JS, with primitive exception handling
+   * Executes JavaScript using V8JS, with primitive exception handling
    *
    * @param string $js JS code to be executed
    * @return string The execution response
